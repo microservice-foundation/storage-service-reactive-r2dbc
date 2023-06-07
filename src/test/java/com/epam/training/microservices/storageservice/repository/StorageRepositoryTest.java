@@ -9,7 +9,6 @@ import com.epam.training.microservices.storageservice.configuration.DatasourceCo
 import com.epam.training.microservices.storageservice.model.Storage;
 import com.epam.training.microservices.storageservice.model.StorageType;
 import java.util.Random;
-import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -141,6 +140,51 @@ class StorageRepositoryTest {
     StepVerifier.create(repository.delete(storage))
         .expectSubscription()
         .expectNextCount(0L)
+        .verifyComplete();
+  }
+
+
+  @ParameterizedTest
+  @EnumSource(StorageType.class)
+  void shouldFindAllByType(StorageType type) {
+    Storage storage1 = storage(type);
+    assertStorageResult(storage1, repository.save(storage1));
+
+    Storage storage2 = storage(type);
+    assertStorageResult(storage2, repository.save(storage2));
+
+    StepVerifier.create(repository.findAllByType(type))
+        .assertNext(result -> {
+          assertEquals(storage1.getId(), result.getId());
+          assertEquals(storage1.getType(), result.getType());
+        })
+        .assertNext(result -> {
+          assertEquals(storage2.getId(), result.getId());
+          assertEquals(storage2.getType(), result.getType());
+        })
+        .verifyComplete();
+  }
+
+  @Test
+  void shouldFindAllByTypeWithCombination() {
+    Storage storage1 = storage(StorageType.STAGING);
+    assertStorageResult(storage1, repository.save(storage1));
+
+    Storage storage2 = storage(StorageType.PERMANENT);
+    assertStorageResult(storage2, repository.save(storage2));
+
+    StepVerifier.create(repository.findAllByType(StorageType.STAGING))
+        .assertNext(result -> {
+          assertEquals(storage1.getId(), result.getId());
+          assertEquals(storage1.getType(), result.getType());
+        })
+        .verifyComplete();
+
+    StepVerifier.create(repository.findAllByType(StorageType.PERMANENT))
+        .assertNext(result -> {
+          assertEquals(storage2.getId(), result.getId());
+          assertEquals(storage2.getType(), result.getType());
+        })
         .verifyComplete();
   }
 

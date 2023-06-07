@@ -2,8 +2,10 @@ package com.epam.training.microservices.storageservice.api.handler;
 
 import com.epam.training.microservices.storageservice.model.StorageDTO;
 import com.epam.training.microservices.storageservice.model.StorageRecord;
+import com.epam.training.microservices.storageservice.model.StorageType;
 import com.epam.training.microservices.storageservice.service.StorageService;
 import java.net.URI;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +50,16 @@ public class StorageHandler {
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(service.findById(id), StorageDTO.class);
+  }
+
+  public Mono<ServerResponse> getAllByType(ServerRequest request) {
+    log.info("Incoming request: {}", request);
+    StorageType type = request.queryParam("type")
+        .map(StorageType::valueOf)
+        .orElse(StorageType.STAGING);
+
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(service.findAllByType(type), StorageDTO.class);
   }
 }

@@ -2,15 +2,14 @@ package com.epam.training.microservices.storageservice.service.implementation;
 
 import com.epam.training.microservices.storageservice.model.Storage;
 import com.epam.training.microservices.storageservice.model.StorageDTO;
-import com.epam.training.microservices.storageservice.model.StorageDTOTest;
 import com.epam.training.microservices.storageservice.model.StorageRecord;
+import com.epam.training.microservices.storageservice.model.StorageType;
 import com.epam.training.microservices.storageservice.model.exceptions.StorageNotFoundException;
 import com.epam.training.microservices.storageservice.repository.CloudStorageRepository;
 import com.epam.training.microservices.storageservice.repository.StorageRepository;
 import com.epam.training.microservices.storageservice.service.Mapper;
 import com.epam.training.microservices.storageservice.service.StorageService;
 import com.epam.training.microservices.storageservice.service.Validator;
-import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -56,11 +55,19 @@ public class StorageServiceImpl implements StorageService {
 
   @Override
   public Mono<StorageDTO> findById(long id) {
-    log.info("Getting a storage with id '{}'", id);
+    log.info("Finding a storage with id '{}'", id);
     return storageRepository.findById(id)
         .flatMap(result -> cloudStorageRepository.checkIfExists(result.getBucket()).thenReturn(result))
         .map(mapper::mapToRecord)
         .switchIfEmpty(Mono.error(new StorageNotFoundException(String.format("Storage is not found with id '%d'", id))));
+  }
+
+  @Override
+  public Flux<StorageDTO> findAllByType(StorageType type) {
+    log.info("Finding all storages by type '{}'", type);
+    return storageRepository.findAllByType(type)
+        .map(mapper::mapToRecord)
+        .switchIfEmpty(Mono.error(new StorageNotFoundException(String.format("Storage is not found by type '%s'", type))));
   }
 
   @Transactional

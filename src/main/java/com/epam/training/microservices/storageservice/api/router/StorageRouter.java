@@ -24,6 +24,8 @@ public class StorageRouter {
             .route(GET("/{id}").and(accept(APPLICATION_JSON)), handler::getById)
             .andRoute(POST("").and(accept(APPLICATION_JSON)).and(contentType(APPLICATION_JSON)), handler::save)
             .andRoute(DELETE("").and(RequestPredicates.queryParam("id", t -> true)).and(accept(APPLICATION_JSON)),
-                handler::deleteByIds));
+                handler::deleteByIds)
+            .andRoute(GET("").and(RequestPredicates.queryParam("type", t -> true)).and(accept(APPLICATION_JSON)),
+                handler::getAllByType));
   }
 }

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -209,6 +211,48 @@ class StorageServiceTest {
 
     StepVerifier.create(storageService.deleteByIds(Flux.fromIterable(List.of(storage1.getId()))))
         .expectError(DeleteBucketFailedException.class)
+        .verify();
+  }
+
+  @ParameterizedTest
+  @EnumSource(StorageType.class)
+  void shouldFindAllStoragesByType(StorageType type) {
+    Storage stagingStorage1 = new Storage.Builder()
+        .id(123L)
+        .bucket("test-bucket1")
+        .path("/files")
+        .type(type)
+        .build();
+    Storage stagingStorage2 = new Storage.Builder()
+        .id(124L)
+        .bucket("test-bucket2")
+        .path("/files")
+        .type(type)
+        .build();
+    when(storageRepository.findAllByType(type)).thenReturn(Flux.just(stagingStorage1, stagingStorage2));
+    when(mapper.mapToRecord(stagingStorage1))
+        .thenReturn(new StorageDTO.Builder().id(stagingStorage1.getId()).type(stagingStorage1.getType()).build());
+
+    when(mapper.mapToRecord(stagingStorage2))
+        .thenReturn(new StorageDTO.Builder().id(stagingStorage2.getId()).type(stagingStorage2.getType()).build());
+
+    StepVerifier.create(storageService.findAllByType(type))
+        .assertNext(result -> {
+          assertEquals(stagingStorage1.getId(), result.getId());
+          assertEquals(stagingStorage1.getType(), result.getType());
+        })
+        .assertNext(result -> {
+          assertEquals(stagingStorage2.getId(), result.getId());
+          assertEquals(stagingStorage2.getType(), result.getType());
+        }).verifyComplete();
+  }
+
+  @ParameterizedTest
+  @EnumSource(StorageType.class)
+  void shouldThrowExceptionWhenFindAllStoragesByType(StorageType type) {
+    when(storageRepository.findAllByType(type)).thenReturn(Flux.empty());
+    StepVerifier.create(storageService.findAllByType(type))
+        .expectError(StorageNotFoundException.class)
         .verify();
   }
 

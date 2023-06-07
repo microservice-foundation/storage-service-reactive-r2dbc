@@ -2,6 +2,7 @@ package com.epam.training.microservices.storageservice.api;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -16,7 +17,10 @@ import com.epam.training.microservices.storageservice.model.exceptions.DeleteBuc
 import com.epam.training.microservices.storageservice.model.exceptions.HeadBucketFailedException;
 import com.epam.training.microservices.storageservice.model.exceptions.StorageNotFoundException;
 import com.epam.training.microservices.storageservice.service.StorageService;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -215,5 +219,61 @@ class StorageApiTest {
         .expectBody()
         .jsonPath("$.status").isEqualTo("INTERNAL_SERVER_ERROR")
         .jsonPath("$.message").isEqualTo("Something bad happened during bucket deletion");
+  }
+
+  @ParameterizedTest
+  @EnumSource(StorageType.class)
+  void shouldGetAllStoragesByType(StorageType type) {
+    StorageDTO storageDTO1 = storageDTO(type);
+    StorageDTO storageDTO2 = storageDTO(type);
+    when(service.findAllByType(type)).thenReturn(Flux.just(storageDTO1, storageDTO2));
+    webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/api/v1/storages")
+            .queryParam("type", type)
+            .build())
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody()
+        .jsonPath("$[*].id").value(containsInAnyOrder(
+                (int) storageDTO1.getId(),
+                (int) storageDTO2.getId()
+            )
+        )
+        .jsonPath("$[*].type").value(containsInAnyOrder(
+                equalToIgnoringCase(storageDTO1.getType().name()),
+                equalToIgnoringCase(storageDTO2.getType().name())
+            )
+        );
+  }
+
+  @ParameterizedTest
+  @EnumSource(StorageType.class)
+  void shouldReturn404WhenGetAllStoragesByType(StorageType type) {
+    when(service.findAllByType(type)).thenThrow(new StorageNotFoundException(String.format("Storage is not found by type '%s'", type)));
+    webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/api/v1/storages")
+            .queryParam("type", type)
+            .build())
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus().isNotFound()
+        .expectBody()
+        .jsonPath("$.status").isEqualTo("NOT_FOUND")
+        .jsonPath("$.message").isEqualTo("Storage is not found")
+        .jsonPath("$.debugMessage").isEqualTo(String.format("Storage is not found by type '%s'", type));
+  }
+
+  private static StorageDTO storageDTO(StorageType type) {
+    Random random = new Random();
+    long id = random.nextInt(1000);
+    return new StorageDTO.Builder()
+        .id(id)
+        .type(type)
+        .bucket("test-bucket-" + id)
+        .path("/files")
+        .build();
   }
 }
