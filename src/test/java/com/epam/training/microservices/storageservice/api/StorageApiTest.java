@@ -68,7 +68,7 @@ class StorageApiTest {
   }
 
   @Test
-  void shouldReturn403WhenSaveInvalidStorage() {
+  void shouldReturn400WhenSaveInvalidStorage() {
     when(service.save(any(Mono.class))).thenThrow(new IllegalArgumentException("Saving invalid song record"));
     webClient.post()
         .uri("/api/v1/storages")
@@ -84,7 +84,7 @@ class StorageApiTest {
   }
 
   @Test
-  void shouldReturn403WhenSaveStorageAndDataIntegrityException() {
+  void shouldReturn400WhenSaveStorageAndDataIntegrityException() {
     when(service.save(any(Mono.class))).thenThrow(new IllegalArgumentException("Saving a storage record with invalid parameters length or" +
         " duplicate value .."));
     webClient.post()

@@ -97,11 +97,11 @@ public final class Storage implements Serializable {
       return false;
     }
     Storage storage = (Storage) o;
-    return id == storage.id && bucket.equals(storage.bucket) && path.equals(storage.path) && type == storage.type;
+    return id == storage.id && bucket.equals(storage.bucket);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, bucket, path, type);
+    return Objects.hash(id, bucket);
   }
 }
