@@ -8,7 +8,7 @@ public abstract class BaseBucketException extends RuntimeException{
   private final int statusCode;
   private final String statusText;
 
-  public BaseBucketException(SdkResponse response) {
+  protected BaseBucketException(SdkResponse response) {
 
     SdkHttpResponse httpResponse = response.sdkHttpResponse();
     if (httpResponse != null) {

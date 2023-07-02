@@ -26,13 +26,13 @@ public class StorageListener {
     return List.of(
         Mono.just(new StorageDTO.Builder()
             .type(StorageType.STAGING)
-            .bucket("resource-staging")
-            .path("/files")
+            .bucket("storage-staging")
+            .path("files/")
             .build()),
         Mono.just(new StorageDTO.Builder()
             .type(StorageType.PERMANENT)
-            .bucket("resource-permanent")
-            .path("/files")
+            .bucket("storage-permanent")
+            .path("files/")
             .build()));
   }
 }

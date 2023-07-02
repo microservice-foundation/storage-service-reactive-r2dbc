@@ -1,6 +1,7 @@
 package com.epam.training.microservices.storageservice.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class StorageDTO implements Serializable {
   private static final long serialVersionUID = 2023_05_29_11_37L;
@@ -67,6 +68,23 @@ public class StorageDTO implements Serializable {
 
   public StorageType getType() {
     return type;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    StorageDTO that = (StorageDTO) o;
+    return id == that.id && bucket.equals(that.bucket);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, bucket);
   }
 
   @Override
