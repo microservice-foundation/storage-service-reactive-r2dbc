@@ -32,14 +32,13 @@ public class CloudStorageRepository {
     checkExceptions.put(HeadBucketResponse.class, response -> Mono.error(new HeadBucketFailedException(response)));
   }
 
-  public Mono<CreateBucketResponse> createBucket(String bucket) {
+  public Mono<Void> createBucket(String bucket) {
     log.info("Creating a bucket with name {}", bucket);
     CreateBucketRequest createBucketRequest = CreateBucketRequest.builder().bucket(bucket).build();
     return Mono.fromFuture(s3Client.createBucket(createBucketRequest))
-        .map(response -> {
+        .flatMap(response -> {
           log.debug("Creating a bucket result: {}", response);
-          checkResult(response);
-          return response;
+          return checkResult(response);
         });
   }
 
@@ -53,9 +52,9 @@ public class CloudStorageRepository {
         });
   }
 
-  public Mono<Void> checkIfExists(String bucketName) {
-    log.info("Sending a HEAD request to check presence of a bucket with name {}", bucketName);
-    HeadBucketRequest headBucketRequest = HeadBucketRequest.builder().bucket(bucketName).build();
+  public Mono<Void> sendHeadRequest(String bucket) {
+    log.info("Sending a HEAD request to check presence of a bucket with name {}", bucket);
+    HeadBucketRequest headBucketRequest = HeadBucketRequest.builder().bucket(bucket).build();
     return Mono.fromFuture(s3Client.headBucket(headBucketRequest))
         .flatMap(response -> {
           log.debug("HEAD bucket request result: {}", response);

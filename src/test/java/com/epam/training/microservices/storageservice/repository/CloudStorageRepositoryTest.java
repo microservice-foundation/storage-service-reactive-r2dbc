@@ -30,9 +30,8 @@ class CloudStorageRepositoryTest {
   void shouldCreateBucket() {
     String bucketName = bucketName();
     StepVerifier.create(repository.createBucket(bucketName))
-        .assertNext(result -> {
-          assertTrue( result.sdkHttpResponse().isSuccessful());
-        })
+        .expectSubscription()
+        .expectNextCount(0)
         .verifyComplete();
   }
 
@@ -47,9 +46,8 @@ class CloudStorageRepositoryTest {
   void shouldDeleteBucket() {
     String bucketName = bucketName();
     StepVerifier.create(repository.createBucket(bucketName))
-        .assertNext(result -> {
-          assertTrue( result.sdkHttpResponse().isSuccessful());
-        })
+        .expectSubscription()
+        .expectNextCount(0)
         .verifyComplete();
 
     StepVerifier.withVirtualTime(() -> repository.deleteBucket(bucketName))
@@ -78,12 +76,11 @@ class CloudStorageRepositoryTest {
   void shouldReturnOkWhenCheckIfExists() {
     String bucketName = bucketName();
     StepVerifier.create(repository.createBucket(bucketName))
-        .assertNext(result -> {
-          assertTrue( result.sdkHttpResponse().isSuccessful());
-        })
+        .expectSubscription()
+        .expectNextCount(0)
         .verifyComplete();
 
-    StepVerifier.create(repository.checkIfExists(bucketName))
+    StepVerifier.create(repository.sendHeadRequest(bucketName))
         .expectSubscription()
         .expectNextCount(0)
         .expectComplete()
@@ -94,7 +91,7 @@ class CloudStorageRepositoryTest {
   void shouldReturnNoSuchBucketExceptionWhenCheckIfExists() {
     String bucketName = bucketName();
 
-    StepVerifier.create(repository.checkIfExists(bucketName))
+    StepVerifier.create(repository.sendHeadRequest(bucketName))
         .expectError(NoSuchBucketException.class)
         .verify();
   }

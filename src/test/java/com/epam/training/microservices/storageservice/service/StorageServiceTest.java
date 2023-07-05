@@ -50,7 +50,7 @@ class StorageServiceTest {
     Storage storage =
         new Storage.Builder().bucket(storageDTO.getBucket()).path(storageDTO.getPath()).type(storageDTO.getType()).id(123L).build();
     when(mapper.mapToEntity(storageDTO)).thenReturn(storage);
-    when(cloudStorageRepository.createBucket(storage.getBucket())).thenReturn(Mono.just(CreateBucketResponse.builder().build()));
+    when(cloudStorageRepository.createBucket(storage.getBucket())).thenReturn(Mono.empty());
     when(storageRepository.save(storage)).thenReturn(Mono.just(storage));
 
     StepVerifier.create(storageService.save(Mono.just(storageDTO)))
@@ -90,7 +90,7 @@ class StorageServiceTest {
     Storage storage =
         new Storage.Builder().bucket(storageDTO.getBucket()).path(storageDTO.getPath()).type(storageDTO.getType()).id(123L).build();
     when(mapper.mapToEntity(storageDTO)).thenReturn(storage);
-    when(cloudStorageRepository.createBucket(storage.getBucket())).thenReturn(Mono.just(CreateBucketResponse.builder().build()));
+    when(cloudStorageRepository.createBucket(storage.getBucket())).thenReturn(Mono.empty());
     when(storageRepository.save(storage)).thenThrow(DataIntegrityViolationException.class);
 
     StepVerifier.create(storageService.save(Mono.just(storageDTO)))
@@ -102,7 +102,7 @@ class StorageServiceTest {
   void shouldFindStorageById() {
     Storage storage = storage();
     when(storageRepository.findById(storage.getId())).thenReturn(Mono.just(storage));
-    when(cloudStorageRepository.checkIfExists(storage.getBucket())).thenReturn(Mono.empty());
+    when(cloudStorageRepository.sendHeadRequest(storage.getBucket())).thenReturn(Mono.empty());
     StorageDTO storageDTO = new StorageDTO.Builder()
         .id(storage.getId())
         .bucket(storage.getBucket())
@@ -134,7 +134,7 @@ class StorageServiceTest {
   void shouldThrowHeadBucketFailedExceptionWhenFindStorageById() {
     Storage storage = storage();
     when(storageRepository.findById(storage.getId())).thenReturn(Mono.just(storage));
-    when(cloudStorageRepository.checkIfExists(storage.getBucket())).thenThrow(HeadBucketFailedException.class);
+    when(cloudStorageRepository.sendHeadRequest(storage.getBucket())).thenThrow(HeadBucketFailedException.class);
 
     StepVerifier.create(storageService.findById(storage.getId()))
         .expectSubscription()

@@ -7,32 +7,36 @@ import java.util.List;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.Logger;
+import reactor.util.Loggers;
 
 @Component
-public class StorageListener {
+public class StoragePopulator {
+  private static final Logger log = Loggers.getLogger(StoragePopulator.class);
   private final StorageEventListener<Mono<StorageDTO>> storagePopulatorEventListener;
 
-  public StorageListener(StorageEventListener<Mono<StorageDTO>> storagePopulatorEventListener) {
+  public StoragePopulator(StorageEventListener<Mono<StorageDTO>> storagePopulatorEventListener) {
     this.storagePopulatorEventListener = storagePopulatorEventListener;
   }
 
   @EventListener(ApplicationStartedEvent.class)
   public void listen() {
-    storages().forEach(storagePopulatorEventListener::eventListened);
+    log.info("Populate storages at application started event");
+    storages().flatMap(storageDTO -> storagePopulatorEventListener.eventListened(Mono.just(storageDTO))).subscribe();
   }
 
-  private List<Mono<StorageDTO>> storages() {
-    return List.of(
-        Mono.just(new StorageDTO.Builder()
+  private Flux<StorageDTO> storages() {
+    return Flux.just(new StorageDTO.Builder()
             .type(StorageType.STAGING)
-            .bucket("storage-staging")
+            .bucket("epam-training-microservice-storage-staging")
             .path("files/")
-            .build()),
-        Mono.just(new StorageDTO.Builder()
+            .build(),
+        new StorageDTO.Builder()
             .type(StorageType.PERMANENT)
-            .bucket("storage-permanent")
+            .bucket("epam-training-microservice-storage-permanent")
             .path("files/")
-            .build()));
+            .build());
   }
 }

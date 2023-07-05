@@ -45,7 +45,7 @@ public class StorageServiceImpl implements StorageService {
     return storage
         .filter(validator::validate)
         .map(mapper::mapToEntity)
-        .flatMap(result -> cloudStorageRepository.createBucket(result.getBucket()).thenReturn(result))
+        .flatMap(this::createBucket)
         .flatMap(storageRepository::save)
         .map(result -> new StorageRecord(result.getId()))
         .onErrorMap(DataIntegrityViolationException.class, e -> new IllegalArgumentException(String.format(
@@ -57,9 +57,18 @@ public class StorageServiceImpl implements StorageService {
   public Mono<StorageDTO> findById(long id) {
     log.info("Finding a storage with id '{}'", id);
     return storageRepository.findById(id)
-        .flatMap(result -> cloudStorageRepository.checkIfExists(result.getBucket()).thenReturn(result))
+        .flatMap(this::checkIfExists)
         .map(mapper::mapToRecord)
         .switchIfEmpty(Mono.error(new StorageNotFoundException(String.format("Storage is not found with id '%d'", id))));
+  }
+
+  private Mono<Storage> createBucket(Storage storage) {
+    return cloudStorageRepository.createBucket(storage.getBucket()).thenReturn(storage);
+  }
+
+  private Mono<Storage> checkIfExists(Storage storage) {
+    return cloudStorageRepository.sendHeadRequest(storage.getBucket())
+        .thenReturn(storage);
   }
 
   @Override
@@ -76,8 +85,17 @@ public class StorageServiceImpl implements StorageService {
     log.info("Deleting storage(s) by id(s) '{}'", ids);
     return ids
         .flatMap(storageRepository::findById)
-        .flatMap(result -> cloudStorageRepository.deleteBucket(result.getBucket()).thenReturn(result))
-        .flatMap(storage -> storageRepository.delete(storage).thenReturn(new StorageRecord(storage.getId())))
+        .flatMap(this::deleteBucket)
+        .flatMap(this::deleteStorage)
+        .map(result -> new StorageRecord(result.getId()))
         .switchIfEmpty(Mono.error(new IllegalArgumentException("Id param is not validated, check your ids")));
+  }
+
+  private Mono<Storage> deleteBucket(Storage storage) {
+    return cloudStorageRepository.deleteBucket(storage.getBucket()).thenReturn(storage);
+  }
+
+  private Mono<Storage> deleteStorage(Storage storage) {
+    return storageRepository.delete(storage).thenReturn(storage);
   }
 }

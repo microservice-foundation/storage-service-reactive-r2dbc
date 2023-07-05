@@ -1,5 +1,6 @@
 package com.epam.training.microservices.storageservice.configuration;
 
+import com.epam.training.microservices.storageservice.repository.CloudStorageRepository;
 import java.time.Duration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -19,6 +20,11 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @RefreshScope
 @EnableConfigurationProperties(S3ClientConfigurationProperties.class)
 public class AwsS3Configuration {
+
+  @Bean
+  public CloudStorageRepository cloudStorageRepository(S3AsyncClient client) {
+    return new CloudStorageRepository(client);
+  }
 
   @Bean
   public S3AsyncClient s3Client(S3ClientConfigurationProperties properties) {
