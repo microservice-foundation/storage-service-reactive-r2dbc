@@ -312,7 +312,7 @@ class StorageApiTest {
 
   @ParameterizedTest
   @EnumSource(StorageType.class)
-  void shouldDeleteStorageByIds(StorageType type) {
+  void shouldReturn200WhenDeleteStorageByIds(StorageType type) {
     final Storage storage1 = getSavedStorageByType(type);
     final Storage storage2 = getSavedStorageByType(type);
     long[] ids = {storage1.getId(), storage2.getId()};
@@ -416,7 +416,7 @@ class StorageApiTest {
   @ParameterizedTest
   @EnumSource(StorageType.class)
   void shouldReturn500WhenGetStorageByIdAndDeleteBucketFailedException(StorageType type) {
-    final SdkResponse sdkResponse1 =
+    final SdkResponse sdkResponse =
         DeleteBucketResponse.builder().sdkHttpResponse(SdkHttpResponse.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .statusText("Something bad happened during bucket deletion").build()).build();
 
@@ -425,7 +425,7 @@ class StorageApiTest {
     final long[] ids1 = {storage1.getId(), storage2.getId()};
     when(storageRepository.findById(ids1[0])).thenReturn(Mono.just(storage1));
     when(storageRepository.findById(ids1[1])).thenReturn(Mono.just(storage2));
-    when(cloudStorageRepository.deleteBucket(storage1.getBucket())).thenThrow(new CloudStorageException(sdkResponse1));
+    when(cloudStorageRepository.deleteBucket(storage1.getBucket())).thenThrow(new CloudStorageException(sdkResponse));
     when(cloudStorageRepository.deleteBucket(storage2.getBucket())).thenReturn(Mono.empty());
     when(storageRepository.delete(storage2)).thenReturn(Mono.empty());
     when(deleteStorageMapper.toDto(storage2)).thenReturn(getDeleteStorageDTO(storage2));
@@ -441,17 +441,14 @@ class StorageApiTest {
         .jsonPath("$.status").isEqualTo("INTERNAL_SERVER_ERROR")
         .jsonPath("$.message").isEqualTo("Something bad happened during bucket deletion");
 
-    final SdkResponse sdkResponse2 =
-        DeleteBucketResponse.builder().sdkHttpResponse(SdkHttpResponse.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .statusText("Something bad happened during bucket deletion").build()).build();
 
     final Storage storage3 = getSavedStorageByType(type);
     final Storage storage4 = getSavedStorageByType(type);
     final long[] ids2 = {storage3.getId(), storage4.getId()};
     when(storageRepository.findById(ids2[0])).thenReturn(Mono.just(storage3));
     when(storageRepository.findById(ids2[1])).thenReturn(Mono.just(storage4));
-    when(cloudStorageRepository.deleteBucket(storage3.getBucket())).thenThrow(new CloudStorageException(sdkResponse2));
-    when(cloudStorageRepository.deleteBucket(storage4.getBucket())).thenThrow(new CloudStorageException(sdkResponse2));
+    when(cloudStorageRepository.deleteBucket(storage3.getBucket())).thenThrow(new CloudStorageException(sdkResponse));
+    when(cloudStorageRepository.deleteBucket(storage4.getBucket())).thenThrow(new CloudStorageException(sdkResponse));
     webClient.delete()
         .uri(uriBuilder -> uriBuilder
             .path("/api/v1/storages")

@@ -10,13 +10,13 @@ import com.epam.training.microservicefoundation.storageservice.mapper.SaveStorag
 import com.epam.training.microservicefoundation.storageservice.model.dto.DeleteStorageDTO;
 import com.epam.training.microservicefoundation.storageservice.model.dto.GetStorageDTO;
 import com.epam.training.microservicefoundation.storageservice.model.dto.SaveStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.model.entity.Storage;
 import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
 import com.epam.training.microservicefoundation.storageservice.model.exception.CloudStorageException;
 import com.epam.training.microservicefoundation.storageservice.model.exception.EntityExistsException;
 import com.epam.training.microservicefoundation.storageservice.model.exception.EntityNotFoundException;
 import com.epam.training.microservicefoundation.storageservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.storageservice.repository.StorageRepository;
-import com.epam.training.microservicefoundation.storageservice.model.entity.Storage;
 import com.epam.training.microservicefoundation.storageservice.service.implementation.StorageServiceImpl;
 import java.util.Random;
 import org.junit.jupiter.api.Test;

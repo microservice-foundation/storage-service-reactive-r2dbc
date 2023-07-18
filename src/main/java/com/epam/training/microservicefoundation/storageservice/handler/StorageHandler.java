@@ -68,7 +68,7 @@ public class StorageHandler {
         .body(service.findAllByType(type), GetStorageDTO.class);
   }
 
-  private Long[] getIds(String paramValue) {
+  private Long[] getIds(final String paramValue) {
     return Arrays.stream(paramValue.split(","))
         .map(String::trim)
         .map(Long::valueOf)
