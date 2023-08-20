@@ -5,6 +5,8 @@ src/main/resources/logs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.DS_Store
+src/.DS_Store
 
 ### STS ###
 .apt_generated
