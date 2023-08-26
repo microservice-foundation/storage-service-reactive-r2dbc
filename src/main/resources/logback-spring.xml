@@ -22,10 +22,8 @@
                         <pattern>
                             {
                             "trace": {
-                            "trace_id": "%mdc{X-B3-TraceId}",
-                            "span_id": "%mdc{X-B3-SpanId}",
-                            "parent_span_id": "%mdc{X-B3-ParentSpanId}",
-                            "exportable": "%mdc{X-Span-Export}"
+                            "trace_id": "%mdc{traceId}",
+                            "span_id": "%mdc{spanId}"
                             }
                             }
                         </pattern>
@@ -52,13 +50,13 @@
             </encoder>
         </appender>
 
-        <root level="INFO">
-            <appender-ref ref="jsonConsoleAppender"/>
-        </root>
-
         <logger level="DEBUG" name="org.springframework.r2dbc" additivity="false">
             <appender-ref ref="jsonConsoleAppender"/>
         </logger>
+
+        <root level="INFO">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
     </springProfile>
 
     <!-- Log configuration for development profile -->

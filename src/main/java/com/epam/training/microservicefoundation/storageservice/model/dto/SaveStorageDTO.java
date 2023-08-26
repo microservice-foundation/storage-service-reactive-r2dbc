@@ -4,8 +4,8 @@ import com.epam.training.microservicefoundation.storageservice.model.entity.Stor
 import com.epam.training.microservicefoundation.storageservice.validator.ValidBucket;
 import com.epam.training.microservicefoundation.storageservice.validator.ValidPath;
 import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

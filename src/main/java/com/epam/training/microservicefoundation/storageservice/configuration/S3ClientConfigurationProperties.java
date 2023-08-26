@@ -2,12 +2,11 @@ package com.epam.training.microservicefoundation.storageservice.configuration;
 
 import java.net.URI;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import software.amazon.awssdk.regions.Region;
 
-@ConfigurationProperties(prefix = "aws.s3")
-@ConstructorBinding
+@ConfigurationProperties(prefix = S3ClientConfigurationProperties.PREFIX)
 public class S3ClientConfigurationProperties {
+  public static final String PREFIX = "aws.s3";
   private Region region = Region.US_EAST_1;
   private URI endpoint;
   private int maxRetry;
@@ -16,11 +15,6 @@ public class S3ClientConfigurationProperties {
   // for the last part. This may change for other S3-compatible services, so let't
   // define a configuration property for that
   private final int multipartMinPartSize = 5 * 1024 * 1024;
-
-  public S3ClientConfigurationProperties(URI endpoint, String bucketName, int maxRetry) {
-    this.endpoint = endpoint;
-    this.maxRetry = maxRetry;
-  }
 
   public Region getRegion() {
     return region;
