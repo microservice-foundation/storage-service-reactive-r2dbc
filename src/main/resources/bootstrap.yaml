@@ -31,5 +31,4 @@ eureka:
 management:
   endpoints.web.exposure.include: health, info, refresh
   tracing:
-    sampling.probability: 1.0
     propagation.type: b3
