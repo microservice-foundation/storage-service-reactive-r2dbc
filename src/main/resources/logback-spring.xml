@@ -71,12 +71,12 @@
             </encoder>
         </appender>
 
-        <root level="DEBUG">
-            <appender-ref ref="flatConsoleAppender"/>
-        </root>
-
         <logger level="DEBUG" name="org.springframework.r2dbc" additivity="false">
             <appender-ref ref="flatConsoleAppender"/>
         </logger>
+
+        <root level="DEBUG">
+            <appender-ref ref="flatConsoleAppender"/>
+        </root>
     </springProfile>
 </configuration>
