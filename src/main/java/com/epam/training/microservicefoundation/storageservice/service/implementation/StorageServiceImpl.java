@@ -1,14 +1,14 @@
 package com.epam.training.microservicefoundation.storageservice.service.implementation;
 
-import com.epam.training.microservicefoundation.storageservice.mapper.DeleteStorageMapper;
-import com.epam.training.microservicefoundation.storageservice.mapper.GetStorageMapper;
-import com.epam.training.microservicefoundation.storageservice.mapper.SaveStorageMapper;
-import com.epam.training.microservicefoundation.storageservice.model.dto.DeleteStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.dto.SaveStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.entity.Storage;
-import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
-import com.epam.training.microservicefoundation.storageservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.storageservice.service.mapper.DeleteStorageMapper;
+import com.epam.training.microservicefoundation.storageservice.service.mapper.GetStorageMapper;
+import com.epam.training.microservicefoundation.storageservice.service.mapper.SaveStorageMapper;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.DeleteStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.SaveStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.Storage;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.StorageType;
+import com.epam.training.microservicefoundation.storageservice.domain.exception.ExceptionSupplier;
 import com.epam.training.microservicefoundation.storageservice.repository.CloudStorageRepository;
 import com.epam.training.microservicefoundation.storageservice.repository.StorageRepository;
 import com.epam.training.microservicefoundation.storageservice.service.StorageService;

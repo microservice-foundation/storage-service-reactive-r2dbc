@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.storageservice.repository;
 
-import com.epam.training.microservicefoundation.storageservice.model.exception.ExceptionSupplier;
+import com.epam.training.microservicefoundation.storageservice.domain.exception.ExceptionSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;

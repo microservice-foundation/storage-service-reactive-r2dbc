@@ -2,7 +2,7 @@ package com.epam.training.microservicefoundation.storageservice.repository;
 
 import com.epam.training.microservicefoundation.storageservice.common.CloudStorageExtension;
 import com.epam.training.microservicefoundation.storageservice.configuration.AwsS3Configuration;
-import com.epam.training.microservicefoundation.storageservice.configuration.S3ClientConfigurationProperties;
+import com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties;
 import java.time.Duration;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
