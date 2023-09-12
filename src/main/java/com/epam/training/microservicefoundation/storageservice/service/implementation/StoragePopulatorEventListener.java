@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.storageservice.service.implementation;
 
-import com.epam.training.microservicefoundation.storageservice.model.dto.SaveStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.SaveStorageDTO;
 import com.epam.training.microservicefoundation.storageservice.service.StorageEventListener;
 import com.epam.training.microservicefoundation.storageservice.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.epam.training.microservicefoundation.storageservice.service.implementation;
 
-import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
-import com.epam.training.microservicefoundation.storageservice.model.dto.SaveStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.StorageType;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.SaveStorageDTO;
 import com.epam.training.microservicefoundation.storageservice.service.StorageEventListener;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;

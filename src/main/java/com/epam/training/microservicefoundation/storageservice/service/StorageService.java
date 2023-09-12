@@ -1,9 +1,9 @@
 package com.epam.training.microservicefoundation.storageservice.service;
 
-import com.epam.training.microservicefoundation.storageservice.model.dto.DeleteStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.dto.GetStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.dto.SaveStorageDTO;
-import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.DeleteStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.GetStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.dto.SaveStorageDTO;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.StorageType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

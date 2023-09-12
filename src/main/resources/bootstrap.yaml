@@ -28,4 +28,7 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     preferIpAddress: true
 
-management.endpoints.web.exposure.include: health, info, refresh
+management:
+  endpoints.web.exposure.include: health, info, refresh
+  tracing:
+    propagation.type: b3

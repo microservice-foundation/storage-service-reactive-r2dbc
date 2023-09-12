@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.epam.training.microservicefoundation.storageservice.common.PostgresExtension;
 import com.epam.training.microservicefoundation.storageservice.configuration.DatasourceConfiguration;
-import com.epam.training.microservicefoundation.storageservice.model.entity.Storage;
-import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.Storage;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.StorageType;
 import java.util.Random;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

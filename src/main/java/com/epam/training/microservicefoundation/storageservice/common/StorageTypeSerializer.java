@@ -1,6 +1,6 @@
 package com.epam.training.microservicefoundation.storageservice.common;
 
-import com.epam.training.microservicefoundation.storageservice.model.entity.StorageType;
+import com.epam.training.microservicefoundation.storageservice.domain.entity.StorageType;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;

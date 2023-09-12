@@ -1,5 +1,6 @@
 package com.epam.training.microservicefoundation.storageservice.configuration;
 
+import com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties;
 import com.epam.training.microservicefoundation.storageservice.repository.CloudStorageRepository;
 import java.time.Duration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,11 +18,12 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Configuration;
 
 @TestConfiguration
-@EnableConfigurationProperties(value = S3ClientConfigurationProperties.class)
+@EnableConfigurationProperties(value = com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties.class)
 public class AwsS3Configuration {
 
   @Bean
-  public S3AsyncClient s3Client(S3ClientConfigurationProperties properties) {
+  public S3AsyncClient s3Client(
+      com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties properties) {
     SdkAsyncHttpClient httpClient = NettyNioAsyncHttpClient.builder()
         .writeTimeout(Duration.ZERO)
         .maxConcurrency(64)
@@ -42,17 +44,20 @@ public class AwsS3Configuration {
         .build();
   }
 
-  private StaticCredentialsProvider getStaticCredentialsProvider(S3ClientConfigurationProperties properties) {
+  private StaticCredentialsProvider getStaticCredentialsProvider(
+      com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties properties) {
     return StaticCredentialsProvider.create(getAwsBasicCredentials(properties));
   }
 
-  private ClientOverrideConfiguration clientOverrideConfiguration(S3ClientConfigurationProperties properties) {
+  private ClientOverrideConfiguration clientOverrideConfiguration(
+      com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties properties) {
     return ClientOverrideConfiguration.builder()
         .retryPolicy(retryPolicy(properties))
         .build();
   }
 
-  private RetryPolicy retryPolicy(S3ClientConfigurationProperties properties) {
+  private RetryPolicy retryPolicy(
+      com.epam.training.microservicefoundation.storageservice.configuration.properties.S3ClientConfigurationProperties properties) {
     return RetryPolicy.builder()
         .retryCondition(RetryCondition.defaultRetryCondition())
         .backoffStrategy(BackoffStrategy.defaultStrategy())

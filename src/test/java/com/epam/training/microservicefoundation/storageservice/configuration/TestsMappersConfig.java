@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
 @Configuration
-@ComponentScan(basePackages = "com.epam.training.microservicefoundation.storageservice.mapper",
+@ComponentScan(basePackages = "com.epam.training.microservicefoundation.storageservice.service.mapper",
     includeFilters = {@Filter(type = FilterType.REGEX, pattern = "\\*Impl")})
 public class TestsMappersConfig { }
